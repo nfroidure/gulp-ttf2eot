@@ -1,5 +1,5 @@
 # gulp-ttf2eot [![NPM version](https://badge.fury.io/js/gulp-ttf2eot.png)](https://npmjs.org/package/gulp-ttf2eot) [![Build status](https://secure.travis-ci.org/nfroidure/gulp-ttf2eot.png)](https://travis-ci.org/nfroidure/gulp-ttf2eot)
-> Create a TTF font from an SVG font with [Gulp](http://gulpjs.com/).
+> Create a EOT font from a TTF font with [Gulp](http://gulpjs.com/).
 
 ## Usage
 
@@ -23,7 +23,7 @@ gulp.task('ttf2eot', function(){
 
 ### Contributing / Issues
 
-Please submit SVG to TTF related issues to the
+Please submit TTF to EOT related issues to the
  [ttf2eot project](https://github.com/fontello/ttf2eot)
  on wich gulp-ttf2eot is built.
 
