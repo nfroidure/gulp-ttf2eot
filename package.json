@@ -1,6 +1,6 @@
 {
   "name": "gulp-ttf2eot",
-  "description": "Create a TTF font from an SVG font",
+  "description": "Create an EOT font from a TTF font",
   "version": "0.0.1",
   "homepage": "https://github.com/nfroidure/gulp-ttf2eot",
   "author": {
