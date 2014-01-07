@@ -27,10 +27,11 @@ describe('gulp-ttf2eot conversion', function() {
         .pipe(ttf2eot())
         // Uncomment to regenerate the test files if changes in the ttf2eot lib
         // .pipe(gulp.dest(__dirname + '/fixtures/'))
-        .pipe(es.map(function(file) {
+        .pipe(es.through(function(file) {
           assert.equal(file.contents.length, eot.length);
           assert.equal(file.contents.toString('utf-8'), eot.toString('utf-8'));
-          done();
+        }, function() {
+            done();
         }));
 
   });
@@ -39,13 +40,14 @@ describe('gulp-ttf2eot conversion', function() {
 
       gulp.src(filename + '.ttf', {buffer: false})
         .pipe(ttf2eot())
-        .pipe(es.map(function(file) {
+        .pipe(es.through(function(file) {
           // Get the buffer to compare results
           file.contents.pipe(es.wait(function(err, data) {
             assert.equal(data.length, eot.toString('utf-8').length);
             assert.equal(data, eot.toString('utf-8'));
-            done();
           }));
+        }, function() {
+            done();
         }));
 
   });
