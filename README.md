@@ -21,6 +21,16 @@ gulp.task('ttf2eot', function(){
 });
 ```
 
+## API
+
+### ttf2eot(options)
+
+#### options.ignoreExt
+Type: `Boolean`
+Default value: `false`
+
+Set to true to also convert files that doesn't have the .ttf extension.
+
 ### Contributing / Issues
 
 Please submit TTF to EOT related issues to the
