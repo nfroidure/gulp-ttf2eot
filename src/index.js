@@ -1,4 +1,4 @@
-var PassThrough = require('stream').PassThrough
+var Stream = require('stream')
   , gutil = require('gulp-util')
   , BufferStreams = require('bufferstreams')
   , ttf2eot = require('ttf2eot')
@@ -34,11 +34,11 @@ function ttf2eotGulp(options) {
   options = options || {};
   options.ignoreExt = options.ignoreExt || false;
 
-  var stream = new PassThrough({objectMode: true});
+  var stream = new Stream.Transform({objectMode: true});
 
-  stream.on('data', function(file) {
-    if(file.isNull()) return; // Do nothing
-    if((!options.ignoreExt) && '.ttf' !== path.extname(file.path)) return;
+  stream._transform = function(file, unused, done) {
+    if(file.isNull()) return done(); // Do nothing
+    if((!options.ignoreExt) && '.ttf' !== path.extname(file.path)) return done();
   
     file.path = gutil.replaceExtension(file.path, ".eot");
 
@@ -58,8 +58,12 @@ function ttf2eotGulp(options) {
     } else {
       file.contents = file.contents.pipe(new BufferStreams(ttf2eotTransform()));
     }
+    
+    this.push(file);
+    
+    done();
 
-  });
+  };
 
   return stream;
 
