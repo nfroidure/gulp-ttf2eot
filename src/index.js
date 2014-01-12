@@ -37,8 +37,17 @@ function ttf2eotGulp(options) {
   var stream = new Stream.Transform({objectMode: true});
 
   stream._transform = function(file, unused, done) {
-    if(file.isNull()) return done(); // Do nothing
-    if((!options.ignoreExt) && '.ttf' !== path.extname(file.path)) return done();
+     // When null just pass through
+    if(file.isNull()) {
+      stream.push(file); done();
+      return;
+    }
+
+    // If the ext doesn't match, pass it through
+    if((!options.ignoreExt) && '.ttf' !== path.extname(file.path)) {
+      stream.push(file); done();
+      return;
+    }
   
     file.path = gutil.replaceExtension(file.path, ".eot");
 
@@ -59,10 +68,8 @@ function ttf2eotGulp(options) {
       file.contents = file.contents.pipe(new BufferStreams(ttf2eotTransform()));
     }
     
-    this.push(file);
-    
+    stream.push(file);
     done();
-
   };
 
   return stream;

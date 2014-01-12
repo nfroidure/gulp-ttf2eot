@@ -23,6 +23,30 @@ describe('gulp-ttf2eot conversion', function() {
   var filename = __dirname + '/fixtures/iconsfont';
   var eot = fs.readFileSync(filename + '.eot');
 
+  describe('with null contents', function() {
+
+    it('should let null files pass through', function(done) {
+
+        var s = ttf2eot()
+          , n = 0;
+        s.pipe(es.through(function(file) {
+            assert.equal(file.path,'bibabelula.foo');
+            assert.equal(file.contents, null);
+            n++;
+          }, function() {
+            assert.equal(n,1);
+            done();
+          }));
+        s.write(new gutil.File({
+          path: 'bibabelula.foo',
+          contents: null
+        }));
+        s.end();
+
+    });
+
+  });
+
   describe('in buffer mode', function() {
     it('should work', function(done) {
 
