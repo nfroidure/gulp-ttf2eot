@@ -1,7 +1,7 @@
 {
   "name": "gulp-ttf2eot",
   "description": "Create an EOT font from a TTF font",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/nfroidure/gulp-ttf2eot",
   "author": {
     "name": "Nicolas Froidure",
