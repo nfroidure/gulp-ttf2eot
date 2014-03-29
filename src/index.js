@@ -1,4 +1,4 @@
-var Stream = require('stream')
+var Stream = require('readable-stream')
   , gutil = require('gulp-util')
   , BufferStreams = require('bufferstreams')
   , ttf2eot = require('ttf2eot')
