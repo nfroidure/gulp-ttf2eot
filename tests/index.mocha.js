@@ -1,13 +1,14 @@
 'use strict';
 
-var gulp = require('gulp')
-  , assert = require('assert')
-  , es = require('event-stream')
-  , fs = require('fs')
-  , ttf2eot = require(__dirname + '/../src/index.js')
-  , Stream = require('stream')
-  , gutil = require('gulp-util')
-;
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var Stream = require('stream');
+var fs = require('fs');
+
+var assert = require('assert');
+var StreamTest = require('streamtest');
+
+var ttf2eot = require('../src/index.js');
 
 // Erasing date to get an invariant created and modified font date
 // See: https://github.com/fontello/ttf2eot/blob/c6de4bd45d50afc6217e150dbc69f1cd3280f8fe/lib/sfnt.js#L19
@@ -23,160 +24,153 @@ describe('gulp-ttf2eot conversion', function() {
   var filename = __dirname + '/fixtures/iconsfont';
   var eot = fs.readFileSync(filename + '.eot');
 
-  describe('with null contents', function() {
+  // Iterating through versions
+  StreamTest.versions.forEach(function(version) {
 
-    it('should let null files pass through', function(done) {
+    describe('for ' + version + ' streams', function() {
 
-        var s = ttf2eot()
-          , n = 0;
-        s.pipe(es.through(function(file) {
-            assert.equal(file.path,'bibabelula.foo');
-            assert.equal(file.contents, null);
-            n++;
-          }, function() {
-            assert.equal(n,1);
-            done();
-          }));
-        s.write(new gutil.File({
-          path: 'bibabelula.foo',
-          contents: null
-        }));
-        s.end();
+      describe('with null contents', function() {
 
-    });
-
-  });
-
-  describe('in buffer mode', function() {
-    it('should work', function(done) {
-
-        var n = 0;
-        gulp.src(filename + '.ttf')
-          .pipe(ttf2eot())
-          // Uncomment to regenerate the test files if changes in the ttf2eot lib
-          // .pipe(gulp.dest(__dirname + '/fixtures/'))
-          .pipe(es.through(function(file) {
-            assert.equal(file.path, filename + '.eot');
-            assert.equal(file.contents.length, eot.length);
-            assert.equal(file.contents.toString('utf-8'), eot.toString('utf-8'));
-            n++;
-          }, function() {
-            assert.equal(n,1);
-            done();
-          }));
-
-    });
-
-    it('should work with the clone option', function(done) {
-
-        var n = 0;
-        gulp.src(filename + '.ttf', {buffer: true})
-          .pipe(ttf2eot({clone: true}))
-          .pipe(es.through(function(file) {
-            if(file.path === filename + '.eot') {
-              assert.equal(file.contents.length, eot.length);
-              assert.equal(file.contents.toString('utf-8'), eot.toString('utf-8'));
-            } else {
-              assert.equal(file.path, filename + '.ttf');
-              assert.equal(file.contents.toString('utf-8'),
-                fs.readFileSync(filename + '.ttf','utf-8'));
-            }
-            n++;
-          }, function() {
-            assert.equal(n,2);
-            done();
-          }));
-
-    });
-
-    it('should let non-ttf files pass through', function(done) {
-
-        var s = ttf2eot()
-          , n = 0;
-        s.pipe(es.through(function(file) {
-            assert.equal(file.path,'bibabelula.foo');
-            assert.equal(file.contents.toString('utf-8'), 'ohyeah');
-            n++;
-          }, function() {
-            assert.equal(n,1);
-            done();
-          }));
-        s.write(new gutil.File({
-          path: 'bibabelula.foo',
-          contents: new Buffer('ohyeah')
-        }));
-        s.end();
-
-    });
-
-  });
-
-
-  describe('in stream mode', function() {
-    it('should work', function(done) {
-
-        var n = 0;
-        gulp.src(filename + '.ttf', {buffer: false})
-          .pipe(ttf2eot())
-          .pipe(es.through(function(file) {
-            assert.equal(file.path, filename + '.eot');
-            // Get the buffer to compare results
-            file.contents.pipe(es.wait(function(err, data) {
-              assert.equal(data.length, eot.toString('utf-8').length);
-              assert.equal(data, eot.toString('utf-8'));
+        it('should let null files pass through', function(done) {
+            
+            StreamTest[version].fromObjects([new gutil.File({
+              path: 'bibabelula.foo',
+              contents: null
+            })])
+            .pipe(ttf2eot())
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+              if(err) {
+                done(err);
+              }
+              assert.equal(objs.length, 1);
+              assert.equal(objs[0].path, 'bibabelula.foo');
+              assert.equal(objs[0].contents, null);
+              done();
             }));
-            n++;
-          }, function() {
-            assert.equal(n,1);
-            done();
-          }));
 
-    });
+        });
 
-    it('should work with the clone option', function(done) {
+      });
 
-        var n = 0;
-        gulp.src(filename + '.ttf', {buffer: false})
-          .pipe(ttf2eot({clone: true}))
-          .pipe(es.through(function(file) {
-            if(file.path === filename + '.eot') {
-              file.contents.pipe(es.wait(function(err, data) {
-                assert.equal(data.length, eot.toString('utf-8').length);
-                assert.equal(data, eot.toString('utf-8'));
+      describe('in buffer mode', function() {
+
+        it('should work', function(done) {
+
+          gulp.src(filename + '.ttf', {buffer: true})
+            .pipe(ttf2eot())
+            // Uncomment to regenerate the test files if changes in the ttf2eot lib
+            // .pipe(gulp.dest(__dirname + '/fixtures/'))
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+              if(err) {
+                done(err);
+              }
+              assert.equal(objs.length, 1);
+              assert.equal(objs[0].path, filename + '.eot');
+              assert.equal(objs[0].contents.toString('utf-8'), eot.toString('utf-8'));
+              done();
+            }));
+
+        });
+
+        it('should work with the clone option', function(done) {
+
+          gulp.src(filename + '.ttf', {buffer: true})
+            .pipe(ttf2eot({clone: true}))
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+              if(err) {
+                done(err);
+              }
+              assert.equal(objs.length, 2);
+              assert.equal(objs[0].path, filename + '.ttf');
+              assert.equal(objs[0].contents.toString('utf-8'), fs.readFileSync(filename + '.ttf','utf-8'));
+              assert.equal(objs[1].path, filename + '.eot');
+              assert.equal(objs[1].contents.toString('utf-8'), eot.toString('utf-8'));
+              done();
+            }));
+
+        });
+
+        it('should let non-ttf files pass through', function(done) {
+            
+            StreamTest[version].fromObjects([new gutil.File({
+              path: 'bibabelula.foo',
+              contents: new Buffer('ohyeah')
+            })])
+            .pipe(ttf2eot())
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+                assert.equal(objs.length, 1);
+                assert.equal(objs[0].path, 'bibabelula.foo');
+                assert.equal(objs[0].contents.toString('utf-8'), 'ohyeah');
+                done();
+            }));
+
+        });
+      });
+
+
+      describe('in stream mode', function() {
+        it('should work', function(done) {
+
+          gulp.src(filename + '.ttf', {buffer: false})
+            .pipe(ttf2eot())
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+              if(err) {
+                done(err);
+              }
+              assert.equal(objs.length, 1);
+              assert.equal(objs[0].path, filename + '.eot');
+              objs[0].contents.pipe(StreamTest[version].toText(function(err, text) {
+                assert.equal(text, eot.toString('utf-8'));
+                done();
               }));
-            } else {
-              assert.equal(file.path, filename + '.ttf');
-              file.contents.pipe(es.wait(function(err, data) {
-                assert.equal(data, fs.readFileSync(filename + '.ttf','utf-8'));
+            }));
+
+        });
+
+        it('should work with the clone option', function(done) {
+
+          gulp.src(filename + '.ttf', {buffer: false})
+            .pipe(ttf2eot({clone: true}))
+            .pipe(StreamTest[version].toObjects(function(err, objs) {
+              if(err) {
+                done(err);
+              }
+              assert.equal(objs.length, 2);
+              assert.equal(objs[0].path, filename + '.ttf');
+              assert.equal(objs[1].path, filename + '.eot');
+              objs[0].contents.pipe(StreamTest[version].toText(function(err, text) {
+                assert.equal(text, fs.readFileSync(filename + '.ttf','utf-8'));
+                objs[1].contents.pipe(StreamTest[version].toText(function(err, text) {
+                  assert.equal(text, eot.toString('utf-8'));
+                  done();
+                }));
               }));
+            }));
+
+        });
+
+        it('should let non-ttf files pass through', function(done) {
+            
+          StreamTest[version].fromObjects([new gutil.File({
+            path: 'bibabelula.foo',
+            contents: new Stream.PassThrough()
+          })])
+          .pipe(ttf2eot())
+          .pipe(StreamTest[version].toObjects(function(err, objs) {
+            if(err) {
+              done(err);
             }
-            n++;
-          }, function() {
-            assert.equal(n,2);
+            assert.equal(objs.length, 1);
+            assert.equal(objs[0].path, 'bibabelula.foo');
+            assert(objs[0].contents instanceof Stream.PassThrough);
             done();
           }));
 
-    });
-
-    it('should let non-ttf files pass through', function(done) {
-
-        var s = ttf2eot()
-          , n = 0;
-        s.pipe(es.through(function(file) {
-            assert.equal(file.path,'bibabelula.foo', {buffer: false});
-            assert(file.contents instanceof Stream.PassThrough);
-            n++;
-          }, function() {
-            assert.equal(n,1);
-            done();
-          }));
-        s.write(new gutil.File({
-          path: 'bibabelula.foo',
-          contents: new Stream.PassThrough()
-        }));
-        s.end();
+        });
+      });
 
     });
+
   });
 
 });

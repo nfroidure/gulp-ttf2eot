@@ -1,9 +1,8 @@
-var Stream = require('readable-stream')
-  , gutil = require('gulp-util')
-  , BufferStreams = require('bufferstreams')
-  , ttf2eot = require('ttf2eot')
-  , path = require('path')
-;
+var path = require('path');
+var Stream = require('readable-stream');
+var gutil = require('gulp-util');
+var BufferStreams = require('bufferstreams');
+var ttf2eot = require('ttf2eot');
 
 const PLUGIN_NAME = 'gulp-ttf2eot';
 
