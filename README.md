@@ -1,7 +1,7 @@
 # gulp-ttf2eot
-> Create a EOT font from a TTF font with [Gulp](http://gulpjs.com/).
+> Create an EOT font from a TTF one with [Gulp](http://gulpjs.com/).
 
-[![NPM version](https://badge.fury.io/js/gulp-ttf2eot.png)](https://npmjs.org/package/gulp-ttf2eot) [![Build status](https://secure.travis-ci.org/nfroidure/gulp-ttf2eot.png)](https://travis-ci.org/nfroidure/gulp-ttf2eot) [![Dependency Status](https://david-dm.org/nfroidure/gulp-ttf2eot.png)](https://david-dm.org/nfroidure/gulp-ttf2eot) [![devDependency Status](https://david-dm.org/nfroidure/gulp-ttf2eot/dev-status.png)](https://david-dm.org/nfroidure/gulp-ttf2eot#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/nfroidure/gulp-ttf2eot/badge.png?branch=master)](https://coveralls.io/r/nfroidure/gulp-ttf2eot?branch=master) [![Code Climate](https://codeclimate.com/github/nfroidure/gulp-ttf2eot.png)](https://codeclimate.com/github/nfroidure/gulp-ttf2eot)
+[![NPM version](https://badge.fury.io/js/gulp-ttf2eot.svg)](https://npmjs.org/package/gulp-ttf2eot) [![Build status](https://secure.travis-ci.org/nfroidure/gulp-ttf2eot.svg)](https://travis-ci.org/nfroidure/gulp-ttf2eot) [![Dependency Status](https://david-dm.org/nfroidure/gulp-ttf2eot.svg)](https://david-dm.org/nfroidure/gulp-ttf2eot) [![devDependency Status](https://david-dm.org/nfroidure/gulp-ttf2eot/dev-status.svg)](https://david-dm.org/nfroidure/gulp-ttf2eot#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/nfroidure/gulp-ttf2eot/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/gulp-ttf2eot?branch=master) [![Code Climate](https://codeclimate.com/github/nfroidure/gulp-ttf2eot.svg)](https://codeclimate.com/github/nfroidure/gulp-ttf2eot)
 
 ## Usage
 

@@ -1,10 +1,12 @@
+'use strict';
+
 var path = require('path');
 var Stream = require('readable-stream');
 var gutil = require('gulp-util');
 var BufferStreams = require('bufferstreams');
 var ttf2eot = require('ttf2eot');
 
-const PLUGIN_NAME = 'gulp-ttf2eot';
+var PLUGIN_NAME = 'gulp-ttf2eot';
 
 // File level transform function
 function ttf2eotTransform(opt) {
@@ -20,8 +22,8 @@ function ttf2eotTransform(opt) {
       try {
         buf = new Buffer(ttf2eot(new Uint8Array(buf)).buffer);
         cb(null, buf);
-      } catch(err) {
-        cb(new gutil.PluginError(PLUGIN_NAME, err, {showStack: true}));
+      } catch(err2) {
+        cb(new gutil.PluginError(PLUGIN_NAME, err2, {showStack: true}));
       }
 
   };
@@ -63,7 +65,7 @@ function ttf2eotGulp(options) {
         stream.push(newFile);
       }
     }
-  
+
     file.path = gutil.replaceExtension(file.path, ".eot");
 
     // Buffers
@@ -82,18 +84,17 @@ function ttf2eotGulp(options) {
     } else {
       file.contents = file.contents.pipe(new BufferStreams(ttf2eotTransform()));
     }
-    
+
     stream.push(file);
     done();
   };
 
   return stream;
 
-};
+}
 
 // Export the file level transform function for other plugins usage
 ttf2eotGulp.fileTransform = ttf2eotTransform;
 
 // Export the plugin main function
 module.exports = ttf2eotGulp;
-
