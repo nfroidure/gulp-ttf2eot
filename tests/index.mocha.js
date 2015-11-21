@@ -13,18 +13,8 @@ var StreamTest = require('streamtest');
 
 var ttf2eot = require('../src/index.js');
 
-// Erasing date to get an invariant created and modified font date
-// See: https://github.com/fontello/ttf2eot/blob/c6de4bd45d50afc6217e150dbc69f1cd3280f8fe/lib/sfnt.js#L19
-Date = (function(d) {
-  function Date() {
-    d.call(this, 3600);
-  }
-  Date.now = d.now;
-  return Date;
-})(Date);
-
 describe('gulp-ttf2eot conversion', function() {
-  var filename = path.joinf(__dirname, 'fixtures', 'iconsfont');
+  var filename = path.join(__dirname, 'fixtures', 'iconsfont');
   var eot = fs.readFileSync(filename + '.eot');
 
   // Iterating through versions
