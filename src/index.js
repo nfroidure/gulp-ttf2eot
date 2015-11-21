@@ -9,36 +9,38 @@ var ttf2eot = require('ttf2eot');
 var PLUGIN_NAME = 'gulp-ttf2eot';
 
 // File level transform function
-function ttf2eotTransform(opt) {
+function ttf2eotTransform() {
   // Return a callback function handling the buffered content
-  return function(err, buf, cb) {
+  return function ttf2eotTransformCb(err, buf, cb) {
 
     // Handle any error
     if(err) {
-      cb(new gutil.PluginError(PLUGIN_NAME, err, {showStack: true}));
+      return cb(new gutil.PluginError(PLUGIN_NAME, err, { showStack: true }));
     }
 
     // Use the buffered content
-      try {
-        buf = new Buffer(ttf2eot(new Uint8Array(buf)).buffer);
-        cb(null, buf);
-      } catch(err2) {
-        cb(new gutil.PluginError(PLUGIN_NAME, err2, {showStack: true}));
-      }
+    try {
+      buf = new Buffer(ttf2eot(new Uint8Array(buf)).buffer);
+      return cb(null, buf);
+    } catch(err2) {
+      return cb(new gutil.PluginError(PLUGIN_NAME, err2, { showStack: true }));
+    }
 
   };
 }
 
 // Plugin function
 function ttf2eotGulp(options) {
+  var stream = new Stream.Transform({ objectMode: true });
 
   options = options || {};
   options.ignoreExt = options.ignoreExt || false;
   options.clone = options.clone || false;
 
-  var stream = new Stream.Transform({objectMode: true});
+  stream._transform = function ttf2eotTransformStream(file, unused, done) {
+    var cntStream;
+    var newFile;
 
-  stream._transform = function(file, unused, done) {
      // When null just pass through
     if(file.isNull()) {
       stream.push(file); done();
@@ -57,16 +59,16 @@ function ttf2eotGulp(options) {
       if(file.isBuffer()) {
         stream.push(file.clone());
       } else {
-        var cntStream = file.contents;
+        cntStream = file.contents;
         file.contents = null;
-        var newFile = file.clone();
+        newFile = file.clone();
         file.contents = cntStream.pipe(new Stream.PassThrough());
         newFile.contents = cntStream.pipe(new Stream.PassThrough());
         stream.push(newFile);
       }
     }
 
-    file.path = gutil.replaceExtension(file.path, ".eot");
+    file.path = gutil.replaceExtension(file.path, '.eot');
 
     // Buffers
     if(file.isBuffer()) {
@@ -76,7 +78,7 @@ function ttf2eotGulp(options) {
         ).buffer);
       } catch(err) {
         stream.emit('error', new gutil.PluginError(PLUGIN_NAME, err, {
-          showStack: true
+          showStack: true,
         }));
       }
 
