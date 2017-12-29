@@ -6,7 +6,6 @@ var gulp = require('gulp');
 var Vinyl = require('vinyl');
 var Cloneable = require('cloneable-readable');
 var Stream = require('stream');
-
 var fs = require('fs');
 var path = require('path');
 
@@ -163,7 +162,7 @@ describe('gulp-ttf2eot conversion', function() {
 
           StreamTest[version].fromObjects([new Vinyl({
             path: 'bibabelula.foo',
-            contents: new Stream.PassThrough()
+            contents: new Stream.PassThrough(),
           })])
           .pipe(ttf2eot())
           .pipe(StreamTest[version].toObjects(function(err, objs) {
