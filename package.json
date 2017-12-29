@@ -32,8 +32,7 @@
     "plugin-error": "^0.1.2",
     "readable-stream": "^2.0.4",
     "replace-ext": "^1.0.0",
-    "ttf2eot": "^2.0.0",
-    "vinyl": "^2.1.0"
+    "ttf2eot": "^2.0.0"
   },
   "keywords": [
     "gulpplugin",
@@ -51,6 +50,7 @@
     "istanbul": "^0.4.0",
     "mocha": "^3.4.2",
     "mocha-lcov-reporter": "^1.0.0",
-    "streamtest": "^1.2.1"
+    "streamtest": "^1.2.1",
+    "vinyl": "^2.1.0"
   }
 }
