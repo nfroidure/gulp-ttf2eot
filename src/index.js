@@ -2,7 +2,8 @@
 
 var path = require('path');
 var Stream = require('readable-stream');
-var gutil = require('gulp-util');
+var PluginError = require('plugin-error');
+var replaceExtension = require('replace-ext');
 var BufferStreams = require('bufferstreams');
 var ttf2eot = require('ttf2eot');
 
@@ -15,7 +16,7 @@ function ttf2eotTransform() {
 
     // Handle any error
     if(err) {
-      return cb(new gutil.PluginError(PLUGIN_NAME, err, { showStack: true }));
+      return cb(new PluginError(PLUGIN_NAME, err, { showStack: true }));
     }
 
     // Use the buffered content
@@ -23,7 +24,7 @@ function ttf2eotTransform() {
       buf = new Buffer(ttf2eot(new Uint8Array(buf)).buffer);
       return cb(null, buf);
     } catch(err2) {
-      return cb(new gutil.PluginError(PLUGIN_NAME, err2, { showStack: true }));
+      return cb(new PluginError(PLUGIN_NAME, err2, { showStack: true }));
     }
 
   };
@@ -68,7 +69,7 @@ function ttf2eotGulp(options) {
       }
     }
 
-    file.path = gutil.replaceExtension(file.path, '.eot');
+    file.path = replaceExtension(file.path, '.eot');
 
     // Buffers
     if(file.isBuffer()) {
@@ -77,7 +78,7 @@ function ttf2eotGulp(options) {
           new Uint8Array(file.contents)
         ).buffer);
       } catch(err) {
-        stream.emit('error', new gutil.PluginError(PLUGIN_NAME, err, {
+        stream.emit('error', new PluginError(PLUGIN_NAME, err, {
           showStack: true,
         }));
       }

@@ -29,9 +29,11 @@
   },
   "dependencies": {
     "bufferstreams": "^1.1.0",
-    "gulp-util": "^3.0.7",
+    "plugin-error": "^0.1.2",
     "readable-stream": "^2.0.4",
-    "ttf2eot": "^2.0.0"
+    "replace-ext": "^1.0.0",
+    "ttf2eot": "^2.0.0",
+    "vinyl": "^2.1.0"
   },
   "keywords": [
     "gulpplugin",
@@ -43,6 +45,7 @@
     "converter"
   ],
   "devDependencies": {
+    "cloneable-readable": "^1.0.0",
     "coveralls": "^2.11.4",
     "gulp": "^3.9.0",
     "istanbul": "^0.4.0",
