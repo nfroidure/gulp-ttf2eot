@@ -3,7 +3,8 @@
 'use strict';
 
 var gulp = require('gulp');
-var gutil = require('gulp-util');
+var Vinyl = require('vinyl');
+var Cloneable = require('cloneable-readable');
 var Stream = require('stream');
 var fs = require('fs');
 var path = require('path');
@@ -26,7 +27,7 @@ describe('gulp-ttf2eot conversion', function() {
 
         it('should let null files pass through', function(done) {
 
-          StreamTest[version].fromObjects([new gutil.File({
+          StreamTest[version].fromObjects([new Vinyl({
             path: 'bibabelula.foo',
             contents: null,
           })])
@@ -88,7 +89,7 @@ describe('gulp-ttf2eot conversion', function() {
 
         it('should let non-ttf files pass through', function(done) {
 
-          StreamTest[version].fromObjects([new gutil.File({
+          StreamTest[version].fromObjects([new Vinyl({
             path: 'bibabelula.foo',
             contents: new Buffer('ohyeah'),
           })])
@@ -159,7 +160,7 @@ describe('gulp-ttf2eot conversion', function() {
 
         it('should let non-ttf files pass through', function(done) {
 
-          StreamTest[version].fromObjects([new gutil.File({
+          StreamTest[version].fromObjects([new Vinyl({
             path: 'bibabelula.foo',
             contents: new Stream.PassThrough(),
           })])
@@ -170,7 +171,8 @@ describe('gulp-ttf2eot conversion', function() {
             }
             assert.equal(objs.length, 1);
             assert.equal(objs[0].path, 'bibabelula.foo');
-            assert(objs[0].contents instanceof Stream.PassThrough);
+            assert(Cloneable.isCloneable(objs[0].contents));
+            assert(objs[0].contents._original instanceof Stream.PassThrough);
             done();
           }));
 
